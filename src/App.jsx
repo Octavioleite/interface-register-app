@@ -21,7 +21,6 @@ function App() {
   };
 
   const getPautas = async () => {
-    // Adicione um endpoint para obter pautas
     const { data } = await axios.get(`${baseUrl}/pautas`);
     setPautas(data);
   };
@@ -41,7 +40,6 @@ function App() {
 
   const removeUser = async (id) => {
     await axios.delete(`${baseUrl}/users/${id}`);
-
     setUsers(users.filter((user) => user.id !== id));
   };
 
@@ -49,11 +47,9 @@ function App() {
     if (!pauta) {
       return alert("Preencha o campo de pauta!");
     }
-    const data = { descricao: pauta, votos: 0 };
-    
-    // Adicione um endpoint para criar pautas
-    const { data: newPauta } = await axios.post(`${baseUrl}/pautas`, data);
+    const data = { descricao: pauta };
 
+    const { data: newPauta } = await axios.post(`${baseUrl}/pautas`, data);
     setPautas([...pautas, newPauta]);
     setPauta("");
   };
@@ -64,7 +60,7 @@ function App() {
       return alert("Você já votou nesta pauta!");
     }
 
-    // Adiciona o voto à pauta
+    // Atualiza o estado local para incrementar os votos
     const updatedPautas = pautas.map((p) =>
       p.id === pautaId ? { ...p, votos: p.votos + 1 } : p
     );
@@ -72,11 +68,14 @@ function App() {
     setPautas(updatedPautas);
 
     // Armazena que o usuário votou nesta pauta
-    setVotes({ ...votes, [email]: { ...votes[email], [pautaId]: true } });
+    setVotes((prevVotes) => ({
+      ...prevVotes,
+      [email]: { ...prevVotes[email], [pautaId]: true },
+    }));
 
     // Atualiza a pauta no servidor
-    await axios.put(`${baseUrl}/pautas/${pautaId}`, {
-      votos: updatedPautas.find(p => p.id === pautaId).votos,
+    await axios.put(`${baseUrl}/pautas/${pautaId}/votar`, {
+      votos: updatedPautas.find((p) => p.id === pautaId).votos,
     });
   };
 
@@ -95,7 +94,7 @@ function App() {
           Name
           <input
             placeholder="Pedro Silva"
-            type="name"
+            type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -146,10 +145,7 @@ function App() {
                 <p>{user?.name}</p>
                 <p>{user?.email}</p>
               </div>
-              <button
-                className="btn-trash"
-                onClick={() => removeUser(user?.id)}
-              >
+              <button className="btn-trash" onClick={() => removeUser(user?.id)}>
                 <img src={Trash} alt="trash" />
               </button>
             </li>
