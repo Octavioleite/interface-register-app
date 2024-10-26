@@ -9,23 +9,24 @@ function App() {
   const [users, setUsers] = useState([]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [pauta, setPauta] = useState("");
-  const [pautas, setPautas] = useState([]);
-  const [votes, setVotes] = useState({}); // Armazenar votos por usuário
+  const [pautas, setPautas] = useState([]); // Estado para armazenar pautas
+  const [descricaoPauta, setDescricaoPauta] = useState(""); // Estado para a descrição da pauta
 
-  const baseUrl = "https://api-register-users.vercel.app";
+  const baseUrl = "http://localhost:3001"; // Ajuste para o URL do seu backend
 
+  // Função para buscar usuários
   const getUsers = async () => {
     const { data } = await axios.get(`${baseUrl}/users`);
     setUsers(data);
   };
 
+  // Função para buscar pautas
   const getPautas = async () => {
-    // Adicione um endpoint para obter pautas
     const { data } = await axios.get(`${baseUrl}/pautas`);
     setPautas(data);
   };
 
+  // Função para adicionar um novo usuário
   const addNewUser = async () => {
     if (!name || !email) {
       return alert("Preencha os campos !");
@@ -39,50 +40,36 @@ function App() {
     setEmail("");
   };
 
+  // Função para remover um usuário
   const removeUser = async (id) => {
     await axios.delete(`${baseUrl}/users/${id}`);
 
     setUsers(users.filter((user) => user.id !== id));
   };
 
-  const addPauta = async () => {
-    if (!pauta) {
-      return alert("Preencha o campo de pauta!");
+  // Função para adicionar uma nova pauta
+  const addNewPauta = async () => {
+    if (!descricaoPauta) {
+      return alert("Preencha a descrição da pauta !");
     }
-    const data = { descricao: pauta, votos: 0 };
-    
-    // Adicione um endpoint para criar pautas
+    const data = { descricao: descricaoPauta };
+
     const { data: newPauta } = await axios.post(`${baseUrl}/pautas`, data);
 
-    setPautas([...pautas, newPauta]);
-    setPauta("");
+    setPautas([...pautas, newPauta]); // Atualiza a lista de pautas
+    setDescricaoPauta(""); // Limpa o campo de descrição
   };
 
-  const vote = async (pautaId) => {
-    // Verifica se o usuário já votou nesta pauta
-    if (votes[email] && votes[email][pautaId]) {
-      return alert("Você já votou nesta pauta!");
-    }
-
-    // Adiciona o voto à pauta
-    const updatedPautas = pautas.map((p) =>
-      p.id === pautaId ? { ...p, votos: p.votos + 1 } : p
-    );
-
-    setPautas(updatedPautas);
-
-    // Armazena que o usuário votou nesta pauta
-    setVotes({ ...votes, [email]: { ...votes[email], [pautaId]: true } });
-
-    // Atualiza a pauta no servidor
-    await axios.put(`${baseUrl}/pautas/${pautaId}`, {
-      votos: updatedPautas.find(p => p.id === pautaId).votos,
-    });
+  // Função para votar em uma pauta
+  const votePauta = async (id) => {
+    const pauta = pautas.find((p) => p.id === id);
+    await axios.put(`${baseUrl}/pautas/${id}`, { votos: pauta.votos + 1 });
+    getPautas(); // Atualiza a lista de pautas
   };
 
   useEffect(() => {
     getUsers();
-    getPautas();
+    getPautas(); // Chama a função para buscar as pautas
   }, []);
 
   return (
@@ -113,32 +100,6 @@ function App() {
 
         <button onClick={addNewUser}>Register new user</button>
 
-        <h1>Pautas</h1>
-
-        <label>
-          Nova Pauta
-          <input
-            placeholder="Descrição da pauta"
-            type="text"
-            value={pauta}
-            onChange={(e) => setPauta(e.target.value)}
-          />
-        </label>
-        
-        <button onClick={addPauta}>Adicionar Pauta</button>
-
-        <ul>
-          {pautas.map((p) => (
-            <li key={p.id}>
-              <div>
-                <p>{p.descricao}</p>
-                <p>Votos: {p.votos}</p>
-              </div>
-              <button onClick={() => vote(p.id)}>Votar</button>
-            </li>
-          ))}
-        </ul>
-
         <ul>
           {users.map((user) => (
             <li key={user.id}>
@@ -151,6 +112,37 @@ function App() {
                 onClick={() => removeUser(user?.id)}
               >
                 <img src={Trash} alt="trash" />
+              </button>
+            </li>
+          ))}
+        </ul>
+
+        <h1>Pautas</h1>
+
+        <label>
+          Descrição da Pauta
+          <input
+            placeholder="Descrição da pauta"
+            type="text"
+            value={descricaoPauta}
+            onChange={(e) => setDescricaoPauta(e.target.value)}
+          />
+        </label>
+
+        <button onClick={addNewPauta}>Adicionar Pauta</button>
+
+        <ul>
+          {pautas.map((pauta) => (
+            <li key={pauta.id}>
+              <div>
+                <p>{pauta?.descricao}</p>
+                <p>Votos: {pauta?.votos}</p>
+              </div>
+              <button
+                className="btn-vote"
+                onClick={() => votePauta(pauta.id)}
+              >
+                Votar
               </button>
             </li>
           ))}
