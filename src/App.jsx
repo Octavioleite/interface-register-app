@@ -6,79 +6,69 @@ import Image from "./assets/image.svg";
 import Trash from "./assets/trash.svg";
 
 function App() {
-  const [users, setUsers] = useState([]);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [issues, setIssues] = useState([]);
+  const [title, setTitle] = useState("");
 
-  const baseUrl = "https://api-register-users.vercel.app";
+  const baseUrl = "https://api-register-users.vercel.app"; // Atualize para o URL do seu back-end
 
-  const getUsers = async () => {
-    const { data } = await axios.get(`${baseUrl}/users`);
-    setUsers(data);
+  const getIssues = async () => {
+    const { data } = await axios.get(`${baseUrl}/issues`);
+    setIssues(data);
   };
 
-  const addNewUser = async () => {
-    if (!name || !email) {
-      return alert("Preencha os campos !");
+  const addNewIssue = async () => {
+    if (!title) {
+      return alert("Preencha o título da pauta!");
     }
-    const data = { name, email };
+    const data = { title };
 
-    const { data: newUser } = await axios.post(`${baseUrl}/users`, data);
-
-    setUsers([...users, newUser]);
-    setName("");
-    setEmail("");
+    const { data: newIssue } = await axios.post(`${baseUrl}/issues`, data);
+    setIssues([...issues, newIssue]);
+    setTitle("");
   };
 
-  const removeUser = async (id) => {
-    await axios.delete(`${baseUrl}/users/${id}`);
+  const vote = async (id, vote) => {
+    await axios.post(`${baseUrl}/issues/${id}/vote`, { vote });
+    getIssues(); // Recarregar as pautas após o voto
+  };
 
-    setUsers(users.filter((user) => user.id !== id));
+  const removeIssue = async (id) => {
+    await axios.delete(`${baseUrl}/issues/${id}`);
+    setIssues(issues.filter((issue) => issue.id !== id));
   };
 
   useEffect(() => {
-    getUsers();
+    getIssues();
   }, []);
 
   return (
     <div className="app">
       <div className="screen">
         <img src={Image} alt="image" />
-        <h1>Register</h1>
+        <h1>Cadastrar Pauta</h1>
 
         <label>
-          Name
+          Título
           <input
-            placeholder="Pedro Silva"
-            type="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            placeholder="Título da Pauta"
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
           />
         </label>
 
-        <label>
-          Email
-          <input
-            placeholder="email@email.com"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </label>
-
-        <button onClick={addNewUser}>Register new user</button>
+        <button onClick={addNewIssue}>Adicionar Pauta</button>
 
         <ul>
-          {users.map((user) => (
-            <li>
+          {issues.map((issue) => (
+            <li key={issue.id}>
               <div>
-                <p>{user?.name}</p>
-                <p>{user?.email}</p>
+                <p>{issue.title}</p>
+                <p>A favor: {issue.votesFor} | Não sou a favor: {issue.votesAgainst}</p>
               </div>
-              <button
-                className="btn-trash"
-                onClick={() => removeUser(user?.id)}
-              >
+              <button onClick={() => vote(issue.id, "for")}>A Favor</button>
+              <button onClick={() => vote(issue.id, "against")}>Não Sou a Favor</button>
+              <button className="btn-trash" onClick={() => removeIssue(issue.id)}>
                 <img src={Trash} alt="trash" />
               </button>
             </li>
