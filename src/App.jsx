@@ -12,7 +12,7 @@ function App() {
   const [loading, setLoading] = useState(false); // Estado de carregamento
   const [error, setError] = useState(""); // Estado para mensagens de erro
 
-  const baseUrl = "https://api-register-users-gold.vercel.app/";
+  const baseUrl = "https://api-register-users-gold.vercel.app";
 
   const getUsers = async () => {
     setLoading(true);
