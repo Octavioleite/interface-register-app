@@ -9,31 +9,56 @@ function App() {
   const [users, setUsers] = useState([]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false); // Estado de carregamento
+  const [error, setError] = useState(""); // Estado para mensagens de erro
 
-  const baseUrl = "https://api-register-users.vercel.app";
+  const baseUrl = "http://localhost:3001";
 
   const getUsers = async () => {
-    const { data } = await axios.get(`${baseUrl}/users`);
-    setUsers(data);
+    setLoading(true);
+    setError(""); // Limpa mensagens de erro anteriores
+    try {
+      const { data } = await axios.get(`${baseUrl}/users`);
+      setUsers(data);
+    } catch (err) {
+      setError("Erro ao carregar usuários.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const addNewUser = async () => {
     if (!name || !email) {
       return alert("Preencha os campos !");
     }
+
+    // Validação simples de e-mail
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return alert("Por favor, insira um e-mail válido.");
+    }
+
     const data = { name, email };
 
-    const { data: newUser } = await axios.post(`${baseUrl}/users`, data);
-
-    setUsers([...users, newUser]);
-    setName("");
-    setEmail("");
+    try {
+      const { data: newUser } = await axios.post(`${baseUrl}/users`, data);
+      setUsers([...users, newUser]);
+      setName("");
+      setEmail("");
+    } catch (err) {
+      setError("Erro ao adicionar usuário.");
+    }
   };
 
   const removeUser = async (id) => {
-    await axios.delete(`${baseUrl}/users/${id}`);
-
-    setUsers(users.filter((user) => user.id !== id));
+    if (window.confirm("Tem certeza que deseja remover este usuário?")) {
+      try {
+        await axios.delete(`${baseUrl}/users/${id}`);
+        setUsers(users.filter((user) => user.id !== id));
+      } catch (err) {
+        setError("Erro ao remover usuário.");
+      }
+    }
   };
 
   useEffect(() => {
@@ -45,12 +70,13 @@ function App() {
       <div className="screen">
         <img src={Image} alt="image" />
         <h1>Register</h1>
+        {error && <p style={{ color: 'red' }}>{error}</p>} {/* Mensagem de erro */}
 
         <label>
           Name
           <input
             placeholder="Pedro Silva"
-            type="name"
+            type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -66,11 +92,13 @@ function App() {
           />
         </label>
 
-        <button onClick={addNewUser}>Register new user</button>
+        <button onClick={addNewUser} disabled={loading}>
+          {loading ? "Loading..." : "Register new user"}
+        </button>
 
         <ul>
           {users.map((user) => (
-            <li>
+            <li key={user.id}> {/* Adicionando chave única */}
               <div>
                 <p>{user?.name}</p>
                 <p>{user?.email}</p>
