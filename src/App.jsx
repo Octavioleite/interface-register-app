@@ -8,6 +8,8 @@ import Trash from "./assets/trash.svg";
 function App() {
   const [users, setUsers] = useState([]);
   const [name, setName] = useState("");
+  const [cpf, setCpf] = useState("");
+  const [numberApto, setNumberApto] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false); // Estado de carregamento
   const [error, setError] = useState(""); // Estado para mensagens de erro
@@ -30,7 +32,7 @@ function App() {
   };
 
   const addNewUser = async () => {
-    if (!name || !email) {
+    if (!name || !email || !cpf ||!numberApto) {
       return alert("Preencha os campos !");
     }
 
@@ -40,13 +42,15 @@ function App() {
       return alert("Por favor, insira um e-mail válido.");
     }
 
-    const data = { name, email };
+    const data = { name, cpf, email, numberApto};
 
     try {
       const { data: newUser } = await axios.post(`${baseUrl}/users`, data);
       setUsers([...users, newUser]);
       setName("");
+      setCpf("");
       setEmail("");
+      setNumberApto("");
     } catch (err) {
       setError("Erro ao adicionar usuário.");
     }
@@ -83,6 +87,15 @@ function App() {
             onChange={(e) => setName(e.target.value)}
           />
         </label>
+        <label>
+          CPF
+          <input
+            placeholder="111.111.111-11"
+            type="text"
+            value={cpf}
+            onChange={(e) => setCpf(e.target.value)}
+          />
+        </label>
 
         <label>
           Email
@@ -91,6 +104,15 @@ function App() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+          />
+        </label>
+        <label>
+          Número da unidade
+          <input
+            placeholder="85"
+            type="text"
+            value={numberApto}
+            onChange={(e) => setNumberApto(e.target.value)}
           />
         </label>
 
@@ -103,7 +125,9 @@ function App() {
             <li key={user.id}> {/* Adicionando chave única */}
               <div>
                 <p>{user?.name}</p>
+                <p>{user?.cpf}</p>
                 <p>{user?.email}</p>
+                <p>{user?.numberApto}</p>
               </div>
               <button
                 className="btn-trash"
