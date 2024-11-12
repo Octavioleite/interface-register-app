@@ -1,9 +1,12 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-
-import "./App.css";
-import Image from "./assets/image.svg";
+import Navbar from "./components/navbar/navbar";
+import IconUser from "./assets/icon_register_users.png";
+import styles from './App.module.css';
 import Trash from "./assets/trash.svg";
+import { useNavigate } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
+import UserPage from './components/userpage/userpage'; // Certifique-se de importar a página de usuários
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -11,16 +14,19 @@ function App() {
   const [cpf, setCpf] = useState("");
   const [numberApto, setNumberApto] = useState("");
   const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false); // Estado de carregamento
-  const [error, setError] = useState(""); // Estado para mensagens de erro
-  
-  const baseUrl = "  http://localhost:3001";
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
- //const baseUrl = "https://api-register-users-gold.vercel.app";
+  const goToUsers = () => {
+    navigate('/users');
+  };
+
+  const baseUrl = "http://localhost:3001";
 
   const getUsers = async () => {
     setLoading(true);
-    setError(""); // Limpa mensagens de erro anteriores
+    setError("");
     try {
       const { data } = await axios.get(`${baseUrl}/users`);
       setUsers(data);
@@ -32,18 +38,16 @@ function App() {
   };
 
   const addNewUser = async () => {
-    if (!name || !email || !cpf ||!numberApto) {
-      return alert("Preencha os campos !");
+    if (!name || !email || !cpf || !numberApto) {
+      return alert("Preencha todos os campos!");
     }
 
-    // Validação simples de e-mail
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return alert("Por favor, insira um e-mail válido.");
     }
 
-    const data = { name, cpf, email, numberApto};
-
+    const data = { name, cpf, email, numberApto };
     try {
       const { data: newUser } = await axios.post(`${baseUrl}/users`, data);
       setUsers([...users, newUser]);
@@ -51,6 +55,7 @@ function App() {
       setCpf("");
       setEmail("");
       setNumberApto("");
+      goToUsers();
     } catch (err) {
       setError("Erro ao adicionar usuário.");
     }
@@ -71,75 +76,89 @@ function App() {
     getUsers();
   }, []);
 
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (event.key === 'Enter') {
+        addNewUser();
+      }
+    };
+    window.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [addNewUser]);
+
   return (
-    <div className="app">
-      <div className="screen">
-        <img src={Image} alt="image" />
-        <h1>Register</h1>
-        {error && <p style={{ color: 'red' }}>{error}</p>} {/* Mensagem de erro */}
+    <Routes>
+      <Route path="/" element={
+        <div className={styles.app}>
+          <Navbar />
+          <div className={styles.screen}>
+            <img src={IconUser} alt="Logo" />
+            <h1>Registro de Condôminos</h1>
+            {error && <p style={{ color: "red" }}>{error}</p>}
+            <label>
+              Nome
+              <input
+                type="text"
+                placeholder="Pedro Silva"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </label>
+            <label>
+              CPF
+              <input
+                type="text"
+                placeholder="111.111.111-11"
+                value={cpf}
+                onChange={(e) => setCpf(e.target.value)}
+              />
+            </label>
+            <label>
+              Email
+              <input
+                type="email"
+                placeholder="email@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </label>
+            <label>
+              Número da unidade
+              <input
+                type="text"
+                placeholder="85"
+                value={numberApto}
+                onChange={(e) => setNumberApto(e.target.value)}
+              />
+            </label>
 
-        <label>
-          Name
-          <input
-            placeholder="Pedro Silva"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </label>
-        <label>
-          CPF
-          <input
-            placeholder="111.111.111-11"
-            type="text"
-            value={cpf}
-            onChange={(e) => setCpf(e.target.value)}
-          />
-        </label>
+            <button onClick={addNewUser} disabled={loading}>
+              {loading ? "Carregando..." : "Registrar"}
+            </button>
 
-        <label>
-          Email
-          <input
-            placeholder="email@email.com"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </label>
-        <label>
-          Número da unidade
-          <input
-            placeholder="85"
-            type="text"
-            value={numberApto}
-            onChange={(e) => setNumberApto(e.target.value)}
-          />
-        </label>
-
-        <button onClick={addNewUser} disabled={loading}>
-          {loading ? "Loading..." : "Register new user"}
-        </button>
-
-        <ul>
-          {users.map((user) => (
-            <li key={user.id}> {/* Adicionando chave única */}
-              <div>
-                <p>{user?.name}</p>
-                <p>{user?.cpf}</p>
-                <p>{user?.email}</p>
-                <p>{user?.numberApto}</p>
-              </div>
-              <button
-                className="btn-trash"
-                onClick={() => removeUser(user?.id)}
-              >
-                <img src={Trash} alt="trash" />
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
+            <ul>
+              {users.map((user) => (
+                <li key={user.id}>
+                  <div>
+                    <p>Nome: {user.name}</p>
+                    <p>CPF: {user.cpf}</p>
+                    <p>E-mail: {user.email}</p>
+                    <p>Número da unidade: {user.numberApto}</p>
+                  </div>
+                  <button className="btn-trash" onClick={() => removeUser(user.id)}>
+                    <img src={Trash} alt="Excluir" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      } />
+      <Route path="/users" element={<UserPage users={users} />} />
+    </Routes>
   );
 }
 

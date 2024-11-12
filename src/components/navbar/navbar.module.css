@@ -1,0 +1,34 @@
+.navbar-container {
+  display: flex;
+  justify-content: space-between; /* Distribui os itens de navegação */
+  align-items: center; /* Centraliza verticalmente */
+  width: 100%; /* Garante que ocupe a largura inteira */
+  padding: 12px 20px; /* Espaçamento nas laterais */
+  background-color: #919ea0;
+  color: rgb(255, 255, 255);
+}
+
+.navbar-img {
+  width: 32vh; /* Define a largura da imagem */
+  height: auto; /* Mantém a proporção da imagem */
+  max-width: 100%; /* Garante que a imagem não ultrapasse a largura do contêiner */
+}
+
+
+@media (max-width: 768px) {
+  .navbar-img {
+    width: 24vh; /* Define a largura da imagem */
+    height: auto; /* Mantém a proporção da imagem */
+    max-width: 100%; /* Garante que a imagem não ultrapasse a largura do contêiner */
+  }
+
+
+}
+@media (max-width: 480px) {
+  .navbar-img {
+    width: 20vh; /* Define a largura da imagem */
+    height: auto; /* Mantém a proporção da imagem */
+    max-width: 100%; /* Garante que a imagem não ultrapasse a largura do contêiner */
+  }
+}
+
