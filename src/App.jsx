@@ -6,7 +6,7 @@ import styles from './App.module.css';
 import Trash from "./assets/trash.svg";
 import { useNavigate } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
-import UserPage from './components/userpage/userpage'; // Certifique-se de importar a página de usuários
+import UserPage from './pages/userpage/userpage'; // Certifique-se de importar a página de usuários
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -16,14 +16,15 @@ function App() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [loggedInUser, setLoggedInUser] = useState(null); // Estado para armazenar o usuário logado
   const navigate = useNavigate();
 
   const goToUsers = () => {
     navigate('/users');
   };
 
-  //const baseUrl = "http://localhost:3001";
   const baseUrl = "https://api-register-users-gold.vercel.app";
+  //const baseUrl = "http://localhost:3001/users";
   const getUsers = async () => {
     setLoading(true);
     setError("");
@@ -51,11 +52,12 @@ function App() {
     try {
       const { data: newUser } = await axios.post(`${baseUrl}/users`, data);
       setUsers([...users, newUser]);
+      setLoggedInUser(newUser);  // Define o usuário logado
       setName("");
       setCpf("");
       setEmail("");
       setNumberApto("");
-      goToUsers();
+      goToUsers();  // Redireciona para a página de usuários após registro
     } catch (err) {
       setError("Erro ao adicionar usuário.");
     }
@@ -157,7 +159,7 @@ function App() {
           </div>
         </div>
       } />
-      <Route path="/users" element={<UserPage users={users} />} />
+      <Route path="/users" element={<UserPage user={loggedInUser} />} />
     </Routes>
   );
 }
