@@ -1,0 +1,39 @@
+.listContainer {
+  width: 100%;
+}
+
+.list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.pautaItem {
+  display: flex;
+  flex-direction: column; /* Organiza os itens verticalmente */
+  justify-content: space-between;
+  align-items: flex-start;
+  background-color: #f1f3f5;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.pautaContent {
+  width: 100%;
+}
+
+.pautaTema {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px; /* Espaçamento entre o tema e a descrição */
+}
+
+.pautaDescricao {
+  font-size: 1rem;
+  margin-bottom: 10px; /* Espaçamento entre a descrição e a nota */
+}
+
+.pautaNota {
+  font-size: 0.9rem;
+  color: #888; /* Cor mais suave para a nota */
+}

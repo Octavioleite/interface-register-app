@@ -6,7 +6,8 @@ import styles from './App.module.css';
 import Trash from "./assets/trash.svg";
 import { useNavigate } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
-import UserPage from './pages/userpage/userpage'; // Certifique-se de importar a página de usuários
+import UserPage from './pages/userpage/userpage';
+import Admin from './pages/admin/admin'; // Certifique-se de importar a página de usuários
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -160,6 +161,7 @@ function App() {
         </div>
       } />
       <Route path="/users" element={<UserPage user={loggedInUser} />} />
+      <Route path="/admin" element={<Admin />}/>
     </Routes>
   );
 }
