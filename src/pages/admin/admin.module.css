@@ -1,5 +1,77 @@
+/* Estilos Gerais */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #f5f6fa;
+  min-height: 100vh;
+}
+
+.content {
+  width: 80%;
+  max-width: 800px;
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+h1 {
+  font-size: 2rem;
+  color: #34495e;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+h2 {
+  color: #2d3436;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+/* Estilos do Formulário */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #dfe6e9;
+  border-radius: 8px;
+  outline: none;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.input:focus {
+  border-color: #00cec9;
+}
+
+.button {
+  padding: 15px;
+  background-color: #0984e3;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #74b9ff;
+}
+
+/* Lista de Pautas */
 .listContainer {
   width: 100%;
+  margin-top: 20px;
 }
 
 .list {
@@ -9,31 +81,50 @@
 
 .pautaItem {
   display: flex;
-  flex-direction: column; /* Organiza os itens verticalmente */
-  justify-content: space-between;
-  align-items: flex-start;
-  background-color: #f1f3f5;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 10px;
+  flex-direction: column;
+  background-color: #ecf0f1;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.pautaItem:hover {
+  transform: translateY(-5px);
 }
 
 .pautaContent {
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .pautaTema {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: bold;
-  margin-bottom: 10px; /* Espaçamento entre o tema e a descrição */
+  color: #2c3e50;
 }
 
 .pautaDescricao {
   font-size: 1rem;
-  margin-bottom: 10px; /* Espaçamento entre a descrição e a nota */
+  color: #636e72;
 }
 
 .pautaNota {
   font-size: 0.9rem;
-  color: #888; /* Cor mais suave para a nota */
+  color: #b2bec3;
+  margin-top: 10px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .content {
+    width: 95%;
+    padding: 20px;
+  }
+
+  .listContainer {
+    width: 100%;
+  }
 }
