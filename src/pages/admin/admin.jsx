@@ -12,7 +12,7 @@ const Admin = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const baseUrl = "http://localhost:3001";
+  const baseUrl = "https://api-register-users-gold.vercel.app";
 
   const getPautas = async () => {
     setLoading(true);

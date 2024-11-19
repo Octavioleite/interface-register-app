@@ -10,7 +10,7 @@ const UserPage = ({ user }) => {
   const [loading, setLoading] = useState(false);
   const [votos, setVotos] = useState({});
   
-  const baseUrl = "http://localhost:3001";
+  const baseUrl = "https://api-register-users-gold.vercel.app";
 
   if (!user) {
     return <p>Carregando...</p>;
