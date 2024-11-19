@@ -19,6 +19,11 @@ const Navbar = () => {
 
   // Função para verificar a senha
   const handlePasswordCheck = () => {
+    if (!password.trim()) {
+      setError("A senha não pode estar vazia!");
+      return;
+    }
+  
     if (password === correctPassword) {
       setLoading(true);
       setTimeout(() => {
@@ -26,12 +31,12 @@ const Navbar = () => {
         setLoading(false);
         setShowModal(false);
         setPassword("");
+        setError("");
       }, 500);
     } else {
-      setError("Senha incorreta!");
+      setError("Ops! A senha está incorreta. Tente novamente.");
     }
   };
-
   return (
     <div>
       {/* Navbar */}

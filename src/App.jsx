@@ -24,8 +24,8 @@ function App() {
     navigate('/users');
   };
 
-  const baseUrl = "https://api-register-users-gold.vercel.app";
-  //const baseUrl = "http://localhost:3001/users";
+  const baseUrl = "http://localhost:3001";
+  //const baseUrl = "https://api-register-users-gold.vercel.app";
   const getUsers = async () => {
     setLoading(true);
     setError("");

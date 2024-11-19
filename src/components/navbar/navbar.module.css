@@ -9,6 +9,11 @@
   background-color: #919ea0;
   color: #ffffff;
   z-index: 1000; /* Garante que a navbar fique por cima do conteúdo */
+  transition: background-color 0.3s ease;
+}
+
+.navbar-container:hover {
+  background-color: #7f8c8d; /* Sutil mudança de cor ao passar o mouse */
 }
 
 /* Estilo da imagem da logo */
@@ -16,22 +21,37 @@
   width: 32vh; /* Define a largura da imagem */
   height: auto; /* Mantém a proporção da imagem */
   max-width: 100%; /* Garante que a imagem não ultrapasse o contêiner */
+  transform: scale(1); /* Configuração inicial para animação */
+  transition: transform 0.3s ease; /* Animação de escala */
+}
+
+.navbar-img:hover {
+  transform: scale(1.1); /* Aumenta a imagem ligeiramente ao passar o mouse */
 }
 
 /* Botão de Admin */
 .navbar-button {
-  padding: 10px 20px;
-  background-color: #0a9396; /* Cor de fundo do botão */
+  background-color: transparent; /* Fundo transparente */
   color: #ffffff;
-  border: none;
-  border-radius: 8px;
+  border: 2px solid #ffffff; /* Borda branca */
+  border-radius: 8px; /* Bordas arredondadas */
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  padding: 10px 15px; /* Espaçamento interno */
+  font-size: 1rem; /* Tamanho do texto */
+  width: 150px; /* Largura fixa */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra para profundidade */
+  text-align: center; /* Centraliza o texto dentro do botão */
+  transition: all 0.3s ease; /* Animação suave */
+  display: inline-block; /* Garante um comportamento de botão */
 }
 
 .navbar-button:hover {
-  background-color: #94d2bd; /* Cor de fundo ao passar o mouse */
+  background-color: #ffffff; /* Altera a cor de fundo ao passar o mouse */
+  color: #000000; /* Altera a cor do texto ao passar o mouse */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra mais intensa */
+  transform: translateY(-3px); /* Efeito de elevação */
 }
+
 
 /* Modal */
 .modal {
@@ -44,6 +64,16 @@
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.6);
+  animation: fadeIn 0.5s ease; /* Animação ao abrir o modal */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .modalContent {
@@ -54,6 +84,18 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   width: 90%;
   max-width: 400px;
+  animation: scaleIn 0.5s ease; /* Animação ao aparecer */
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .input {
@@ -62,54 +104,117 @@
   margin: 15px 0;
   border: 2px solid #ccc;
   border-radius: 8px;
+  font-family: Arial, Helvetica, sans-serif;
+  transition: border-color 0.3s ease; /* Suave animação ao focar */
 }
 
-.button {
+.input:focus {
+  border-color: #2a9d8f;
+}
+
+/* Botões do Modal */
+.button, .cancelButton {
   padding: 10px 20px;
-  background-color: #2a9d8f;
-  color: #ffffff;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  margin-top: 10px;
+  font-family: Arial, Helvetica, sans-serif;
+  transition: all 0.3s ease; /* Suave animação */
+}
+
+.button {
+  background-color: #2a9d8f;
+  color: #ffffff;
 }
 
 .button:hover {
   background-color: #38b2ac;
+  transform: scale(1.05); /* Aumenta ligeiramente */
 }
 
 .cancelButton {
-  padding: 10px 20px;
   background-color: #e76f51;
   color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-left: 10px;
 }
 
 .cancelButton:hover {
   background-color: #d62828;
+  transform: scale(1.05); /* Aumenta ligeiramente */
 }
 
+/* Mensagem de erro */
 .error {
   color: #e63946;
   margin-top: 10px;
+  animation: shake 0.3s ease; /* Animação de "erro" */
 }
 
-/* Responsividade */
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25%, 75% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+}
+/* Responsividade para tablets e dispositivos médios */
 @media (max-width: 768px) {
+  .navbar-container {/* Coloca os itens em uma coluna */
+    padding: 10px 15px;
+  }
+
   .navbar-img {
-    width: 24vh;
-    height: auto;
-    max-width: 100%;
+    width: 24vh; /* Reduz o tamanho da logo */
+  }
+
+  .navbar-button {
+    width: 120px; /* Reduz a largura do botão */
+    font-size: 0.9rem; /* Diminui o tamanho do texto */
+    padding: 8px 12px; /* Ajusta o espaçamento interno */
+  }
+
+  .modalContent {
+    width: 95%; /* Garante que o modal ocupe a maior parte da tela */
+    max-width: 350px; /* Limita a largura máxima */
+  }
+
+  .input {
+    padding: 10px; /* Ajusta o espaçamento interno */
   }
 }
 
+/* Responsividade para smartphones */
 @media (max-width: 480px) {
+  .navbar-container {
+    padding: 8px 10px; /* Reduz o espaçamento geral */
+  }
+
   .navbar-img {
-    width: 20vh;
-    height: auto;
-    max-width: 100%;
+    width: 20vh; /* Logo menor para caber melhor */
+  }
+
+  .navbar-button {
+    width: 100px; /* Botões mais estreitos */
+    font-size: 0.8rem; /* Texto menor */
+    padding: 6px 10px; /* Reduz o espaçamento interno */
+  }
+
+  .modalContent {
+    width: 100%; /* O modal ocupa toda a largura disponível */
+    padding: 20px; /* Reduz o preenchimento interno */
+  }
+
+  .button, .cancelButton {
+    font-size: 0.9rem; /* Reduz o texto nos botões */
+    padding: 8px 16px; /* Ajusta o espaçamento */
+  }
+
+  .input {
+    font-size: 0.9rem; /* Texto menor nos campos */
+    padding: 8px; /* Ajusta o espaçamento interno */
   }
 }
+
