@@ -46,6 +46,13 @@ const Admin = () => {
 
   useEffect(() => {
     getPautas();
+
+    // Configurando polling para atualizar as pautas a cada 10 segundos
+    const interval = setInterval(() => {
+      getPautas();
+    }, 10000); // Intervalo de 10 segundos
+
+    return () => clearInterval(interval); // Limpa o intervalo ao desmontar o componente
   }, []);
 
   return (
@@ -119,7 +126,6 @@ const Admin = () => {
             </ul>
           )}
         </div>
-
       </div>
     </div>
   );
